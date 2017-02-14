@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>CODE NAME SELECTOR</title>
+</head>
+<script src="resources/prototype.js" type="text/javascript"></script>
+<script src="resources/scriptaculous.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+/**
+ * Generate a string of random characters of the specified length
+ *
+ * @param int length   Length of the string to generate
+ * @param bool nodupes Set to true if duplicate characters should not be allowed
+ * @return string
+ */
+function getRandomString(length, nodupes)
+{
+	// "typecast" the length to an integer
+	length = parseInt(length, 10);
+
+	// make sure the output is at least one character long
+	if (length < 1) {
+		length = 1;
+	}
+
+	// list of characters to use
+	var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+	// final output string
+	var output = '';
+
+	// list of used characters (only used if nodupes === true)
+	var used = '';
+
+	// make sure we don't have an infinite loop
+	if ((nodupes === true) && (length > chars.length)) {
+		length = chars.length;
+	}
+
+	// loop as many times as `length` defines
+	do {
+		// get a random number between 0 and length of `chars`
+		var randnum = Math.floor(Math.random() * chars.length)
+
+		// extract the random character
+		var chr = chars.charAt(randnum);
+
+		// check if we are not allowed to include duplicate characters
+		if (nodupes === true) {
+			// true if character already used
+
+			var added = (used.indexOf(chr) !== -1);
+
+			// skip the character if already used
+			if (added === true) {
+				continue;
+			}
+
+			// add character to the list of used ones
+			used += chr;
+		}
+
+		// add character to the output string
+		output += chr;
+	} while (output.length < length);
+
+	return output;
+}
+
+function getidentifier() {
+    var seed = $F($('seed'));
+    $('res').style.display = 'none';
+    $('congrats').style.display = 'none';
+    $('urlpara').style.display = 'none';
+    new Ajax.Request('/namegen?seed='+seed,
+		     {
+			 method:'get',
+			     onSuccess: function(transport){
+			     var response = transport.responseText || 'error';
+			     response = response.evalJSON();
+			     $('output').update(response.codename);
+			     $('res').appear({duration: 0.3});
+			     $('congrats').appear({duration: 0.3});
+			     var url = ''
+			     if (document.URL.toQueryParams().seed != seed) {
+				 url = document.URL.split('?')[0];
+				 url = url.concat('?seed=',seed);
+			     }
+			     $('recoveryurl').href = url;
+			     window.history.pushState({}, 'CODE NAME SELECTOR', url);
+		             $('urlpara').appear({duration: 0.3});
+			 },
+			     onFailure: function(){ }
+		     });
+    // $('output').update($F($('seed')));
+}
+
+function getRandomIdentifer() {
+    $('seed').setValue(getRandomString(64,false));
+    getidentifier();
+}
+
+</script>
+<style type="text/css">
+  body { background: white; color: black; font-family: Helvetica, Arial, sans-serif; font-size: 16pt; margin: 0; padding: 0; width: 100%; font-variant: small-caps }
+  h1 { width: 60%; margin-left: auto }
+  input { background: white; color: black;  border: 1px solid black; vertical-align: absmiddle font-family: Helvetica, Arial, sans-serif; font-size: 16pt; font-variant: small-caps}
+  input:focus { border: 1px solid #010; }
+  p {}
+  a:visited, a:hover, a:link { color: #010; text-decoration: none; }
+  a:visited { color: #232; }
+  a:before { content: '['; }
+  a:after { content: ']'; }
+  .gridleft { float: left; width: 45%; margin: 0; margin-left: auto; text-align: right}
+  .gridright { float: right; width: 45%; margin: 0; margin-right: auto; }
+</style>
+<body onload="$('seed').focus()">
+  <h1>Code name selector</h1>
+  <div class="gridleft">
+  <p>
+Enter a seed or release ID to obtain your operation code name.
+</p>
+<p>
+  SEED <input size="36" type="text" id="seed" onkeydown="if (event.keyCode == 13) $('send').click();"><input id="send" type="button" value="send" onclick="getidentifier();"><input id="random" type="button" value="random" onclick="getRandomIdentifer();">
+</p>
+  </div>
+  <div class="gridright">
+<p id="res" style="display: none; font-size: 1.5em; color: #010;" class="output">
+  OPERATION<br>
+  <span id="output"></span>
+</p>
+<p id="congrats" style="display: none">
+
+</p>
+<p id="urlpara" style="display: none">
+<a id="recoveryurl" href="">URL TO THIS</a>
+</p>
+</div>
+<script type="text/javascript">
+var potentialseed = document.URL.toQueryParams().seed;
+if (potentialseed) {
+    $('seed').setValue(potentialseed);
+    getidentifier();
+}
+</script>
+</body>
+</html>
