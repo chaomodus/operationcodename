@@ -104,7 +104,7 @@ function getRandomIdentifer() {
 </script>
 <style type="text/css">
   body { background: white; color: black; font-family: Helvetica, Arial, sans-serif; font-size: 16pt; margin: 0; padding: 0; width: 100%; font-variant: small-caps }
-  h1 { width: 60%; margin-left: auto }
+  h1 { width: 90%; border: 1px solid black; margin-left: auto; margin-right: auto; padding: 3px; }
   input { background: white; color: black;  border: 1px solid black; vertical-align: absmiddle font-family: Helvetica, Arial, sans-serif; font-size: 16pt; font-variant: small-caps}
   input:focus { border: 1px solid #010; }
   p {}
@@ -114,10 +114,16 @@ function getRandomIdentifer() {
   a:after { content: ']'; }
   .gridleft { float: left; width: 45%; margin: 0; margin-left: auto; text-align: right}
   .gridright { float: right; width: 45%; margin: 0; margin-right: auto; }
+  .foot { font-size: 0.75em; width: 90%; border: 1px solid black; margin-left: auto; margin-right: auto; padding: 3px }
+  .clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
 </style>
 <body onload="$('seed').focus()">
   <h1>Code name selector</h1>
-  <div class="gridleft">
+  <div class="gridleft" style="padding-top: 5em; padding-bottom: 5em; ">
   <p>
 Enter a seed or release ID to obtain your operation code name.
 </p>
@@ -125,7 +131,7 @@ Enter a seed or release ID to obtain your operation code name.
   SEED <input size="36" type="text" id="seed" onkeydown="if (event.keyCode == 13) $('send').click();"><input id="send" type="button" value="send" onclick="getidentifier();"><input id="random" type="button" value="random" onclick="getRandomIdentifer();">
 </p>
   </div>
-  <div class="gridright">
+  <div class="gridright" style="padding-top: 4em; ">
 <p id="res" style="display: none; font-size: 1.5em; color: #010;" class="output">
   OPERATION<br>
   <span id="output"></span>
@@ -136,7 +142,9 @@ Enter a seed or release ID to obtain your operation code name.
 <p id="urlpara" style="display: none">
 <a id="recoveryurl" href="">URL TO THIS</a>
 </p>
-</div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="foot">Created by Chao Modus &bullet; Security &amp; Privacy Not Guaranteed</div>
 <script type="text/javascript">
 var potentialseed = document.URL.toQueryParams().seed;
 if (potentialseed) {
